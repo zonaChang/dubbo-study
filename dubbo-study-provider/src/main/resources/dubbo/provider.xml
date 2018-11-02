@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://dubbo.apache.org/schema/dubbo
+       http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
+
+    <!-- provider's application name, used for tracing dependency relationship -->
+    <dubbo:application name="demo-provider"/>
+
+
+    <!--
+        register： 只订阅模式。 只订阅注册中心的服务， 不注册服务到注册中心。
+        subscribe: 只注册模式。 只将服务注册到注册中心， 不订阅住注册中心的服务
+        dynamic:  true-动态模式， false-静态模式。 如果人工管理服务提供者的上线和下线， 需要设置为静态模式
+                服务提供者初次注册时为禁用状态，需人工启用。断线时，将不会被自动删除，需人工禁用。
+    -->
+    <dubbo:registry address="multicast://224.5.6.7:1234"
+                    register="true" subscribe="true" dynamic="true"/>
+
+    <!-- service implementation, as same as regular local bean -->
+    <bean id="demoService" class="com.carl.study.dubbo.provider.service.impl.DemoServiceImpl"/>
+
+    <!--
+        多协议配置
+        serialization: 序列化方式
+            启用Kryo或FST
+    -->
+    <dubbo:protocol name="dubbo" port="20880" serialization="kryo" />
+    <dubbo:protocol name="rmi" port="1099" />
+    <dubbo:protocol name="hessian" port="8080" />
+
+    <!--
+        多注册中心配置:
+            1. 竖号分隔同时连接多个不同注册中心，同一注册中心的多个集群地址用逗号分隔
+            <dubbo:registry address="10.20.141.150:9090|10.20.154.177:9010" />
+
+            2. 不同注册中心单独声明
+    -->
+    <dubbo:registry id="chinaRegistry" address="10.20.141.150:9090" />
+    <dubbo:registry id="intlRegistry" address="10.20.154.177:9010" default="false" />
+    <!--
+    指定服务暴露的协议类型. protocol可省略
+    不同服务不同暴露协议类型: A接口使用a协议暴露服务， B接口使用b协议暴露服务
+    同一服务不同暴露协议类型：C接口同时使用a、b协议暴露服务
+         protocol="dubbo"
+         protocol="dubbo,hessian"
+
+    指定注册中心。 register可省略，
+        使用单个注册中心： register="intlRegistry"
+        使用多个注册中心： register="chinaRegistry,intlRegistry"
+
+    接口分组：当一个接口有多种实现时，可以自定义group名称区分不同的服务， consumer引用时也许配置group属性。
+        "*":表示任意组
+        group="feedback"
+
+    version="1.0.0"
+    当一个接口实现，出现不兼容升级时，可以用版本号过渡，版本号不同的服务相互间不引用。
+    可以按照以下的步骤进行版本迁移：
+
+        1. 在低压力时间段，先升级一半提供者为新版本
+        2. 再将所有消费者升级为新版本
+        3. 然后将剩下的一半提供者升级为新版本
+
+    delay：延迟暴露服务
+        -1：等spring完成初始化之后在暴露服务
+        >0: 延迟的具体时长， 单位ms
+    -->
+    <dubbo:service interface="com.carl.study.dubbo.api.service.DemoService" ref="demoService"
+        protocol="dubbo" register="intlRegistry" group="feedback" version="1.0.0"
+        delay="-1"
+    />
+
+
+
+</beans>

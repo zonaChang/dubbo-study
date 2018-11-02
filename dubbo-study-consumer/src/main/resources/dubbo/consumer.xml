@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://dubbo.apache.org/schema/dubbo
+       http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
+
+    <!-- consumer's application name, used for tracing dependency relationship (not a matching criterion),
+    don't set it same as provider -->
+    <dubbo:application name="demo-consumer"/>
+
+    <!-- use multicast registry center to discover service -->
+    <dubbo:registry address="multicast://224.5.6.7:1234"  />
+
+    <!-- generate proxy for the remote service, then demoService can be used in the same way as the
+    local regular interface -->
+    <!--
+        check:是否检测服务可用；
+        true：spring容器启动时检测服务是否可用， 不可用则直接抛出异常；
+        false：不检测是否可用， 但调用时如果仍旧不可用， 依旧会抛异常;
+
+        retries: provider， consumer， interface， method，
+                调用失败后重试次数， 不包含第一次调用
+        cluster: provider，consumer， interface
+                集群失败策略 failfast failsafe failback forking(forks="2")
+        loadbalance 负载均衡策略: provider， consumer， interface， method，
+                Random：随机，按权重设置随机概率，
+                RoundRobin： 轮询，按公约后的权重设置轮询比率，
+                LeastActive：最少活跃调用数，相同活跃数的随机，活跃数指调用前后计数差。 慢的机器收到更少的请求，
+                ConsistentHash： 一致性 Hash，相同参数的请求总是发到同一提供者。
+                                当某一台提供者挂时，原本发往该提供者的请求，基于虚拟节点，平摊到其它提供者，不会引起剧烈变动
+                                缺省只对第一个参数 Hash，如果要修改，请配置 <dubbo:parameter key="hash.arguments" value="0,1" />
+                                缺省用 160 份虚拟节点，如果要修改，请配置 <dubbo:parameter key="hash.nodes" value="320" />
+        分组聚合，合并不同方法的返回值
+            group：需要合并的组
+            merge： 可用在接口和方法上。 true-合并， false-不合并， 其他字符串-合并器名称
+
+        缓存策略：可用在接口和方法上
+            cache：
+                 lru 基于最近最少使用原则删除多余缓存；
+                 threadlocal 当前线程缓存
+                 jcache 与 JSR107 集成，可以桥接各种缓存实现。
+    -->
+    <dubbo:reference id="demoService" check="false" retries="2" cluster="failsafe"
+                     loadbalance="roundrobin" group="aaa,bbb" merger="true"
+                     cache="lru"
+                     interface="com.carl.study.dubbo.api.service.DemoService"/>
+</beans>
