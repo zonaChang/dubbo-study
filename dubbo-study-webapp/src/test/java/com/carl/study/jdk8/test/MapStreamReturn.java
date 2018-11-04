@@ -1,11 +1,14 @@
 package com.carl.study.jdk8.test;
 
-import com.carl.study.dubbo.api.model.Student;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.junit.Test;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import com.carl.study.dubbo.api.model.Student;
 
 /**
  * @Desc 测试map流的return作用
@@ -46,7 +49,7 @@ public class MapStreamReturn {
     System.out.println("size="+students.size());
     System.out.println(students);
 
-    Object result = students.stream().sorted(Comparator.comparing(Student::getId).reversed()).skip(1).limit(2).collect(Collectors.toList());
-    System.out.println("sort:"+result);
+//    Object result = students.stream().sorted(Comparator.comparing(Student::getId).reversed()).skip(1).limit(2).collect(Collectors.toList());
+//    System.out.println("sort:"+result);
   }
 }
