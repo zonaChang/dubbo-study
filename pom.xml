@@ -74,8 +74,28 @@
 				<artifactId>spring-beans</artifactId>
 				<version>${spring.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.aspectj</groupId>
+				<artifactId>aspectjrt</artifactId>
+				<version>1.9.2</version>
+			</dependency>
+			<dependency>
+				<groupId>org.aspectj</groupId>
+				<artifactId>aspectjweaver</artifactId>
+				<version>1.9.2</version>
+			</dependency>
+			<dependency>
+				<groupId>net.sf.json-lib</groupId>
+				<artifactId>json-lib</artifactId>
+				<version>2.1</version>
+				<classifier>jdk15</classifier>
+			</dependency>
 
-
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>javax.servlet-api</artifactId>
+				<version>3.1.0</version>
+			</dependency>
 
 			<dependency>
 				<groupId>org.apache.commons</groupId>
@@ -111,6 +131,12 @@
 				<artifactId>kryo</artifactId>
 				<version>4.0.2</version>
 			</dependency>
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>dubbo-serialization-kryo</artifactId>
+				<version>2.6.4</version>
+			</dependency>
+
 
 			<dependency>
 				<groupId>org.slf4j</groupId>

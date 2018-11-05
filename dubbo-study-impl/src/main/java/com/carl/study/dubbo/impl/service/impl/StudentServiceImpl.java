@@ -14,9 +14,8 @@ public class StudentServiceImpl implements StudentService{
 
 	@Override
 	public String sayHello(String name) {
-		
+
 		System.out.println("StudentServiceImpl.sayHello()");
 		return "carl-"+name;
 	}
-
 }

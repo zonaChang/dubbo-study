@@ -11,8 +11,7 @@
         http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
     <!-- 开启注解配置 -->
-<!--     <context:annotation-config/> -->
     <mvc:annotation-driven />
-    <context:component-scan base-package="com.carl.study.dubbo.webapp.controller,com.carl.study.dubbo.impl.service.impl" />
+    <context:component-scan base-package="com.carl.study.dubbo" />
 
 </beans>
